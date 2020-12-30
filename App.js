@@ -1,14 +1,18 @@
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
+import { LogBox } from "react-native";
 import { enableScreens } from 'react-native-screens';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from "redux";
 import MealsNavigator from './navigation/MealsNavigator';
 import mealsReducer from './store/reducers/meals';
 
-
-enableScreens();
+//These two are to ignore the warnings
+if (!__DEV__) {
+  enableScreens();
+}
+LogBox.ignoreAllLogs();
 
 const rootReducer = combineReducers({ meals: mealsReducer })
 const store = createStore(rootReducer)
