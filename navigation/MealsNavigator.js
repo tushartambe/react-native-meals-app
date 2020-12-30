@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Text } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -18,6 +18,12 @@ import Colors from '../constants/Colors';
 const defaultStackNavigationOptions = {
   headerStyle: {
     backgroundColor: Platform.OS === 'android' ? Colors.primary : ''
+  },
+  headerTitleStyle: {
+    fontFamily: 'open-sans-bold'
+  },
+  headerBackTitleStye: {
+    fontFamily: 'open-sans'
   },
   headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary
 };
@@ -58,7 +64,8 @@ const tabScreenConfig = {
           color={tabInfo.tintColor} />
         )
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary,
+      tabBarLabel: Platform.OS === 'android' ? <Text style={{ fontFamily: 'open-sans-bold' }}>Meals</Text> : 'Meals'
     }
   },
   Favorites: {
@@ -71,7 +78,8 @@ const tabScreenConfig = {
           color={tabInfo.tintColor} />
         )
       },
-      tabBarColor: Colors.accent
+      tabBarColor: Colors.accent,
+      tabBarLabel: Platform.OS === 'android' ? <Text style={{ fontFamily: 'open-sans-bold' }}>Favorites</Text> : 'Favorites'
     }
   }
 }
@@ -83,6 +91,7 @@ const MealsFavTabNavigator = Platform.OS === 'android'
   })
   : createBottomTabNavigator(tabScreenConfig, {
     tabBarOptions: {
+      labelStyle: { fontFamily: 'open-sans' },
       activeTintColor: Colors.accent
     }
   });
@@ -90,11 +99,25 @@ const MealsFavTabNavigator = Platform.OS === 'android'
 
 const FilterNavigator = createStackNavigator({
   Filters: FiltersScreen
+}, {
+  defaultNavigationOptions: defaultStackNavigationOptions
 });
 
 const MainNavigator = createDrawerNavigator({
-  MealsAndFavorites: MealsFavTabNavigator,
+  MealsAndFavorites: {
+    screen: MealsFavTabNavigator,
+    navigationOptions: {
+      drawerLabel: 'Meals'
+    },
+  },
   Filters: FilterNavigator
+}, {
+  contentOptions: {
+    activeTintColor: Colors.accent,
+    labelStyle: {
+      fontFamily: 'open-sans-bold'
+    }
+  }
 });
 
 export default createAppContainer(MainNavigator);
